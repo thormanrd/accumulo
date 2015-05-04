@@ -229,16 +229,16 @@ public class MultiInstanceReplicationIT extends ConfigurableMacIT {
       log.info("Fetching metadata records:");
       for (Entry<Key,Value> kv : connMaster.createScanner(MetadataTable.NAME, Authorizations.EMPTY)) {
         if (ReplicationSection.COLF.equals(kv.getKey().getColumnFamily())) {
-          log.info(kv.getKey().toStringNoTruncate() + " " + ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
+          log.info("{} {}", kv.getKey().toStringNoTruncate(), ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
         } else {
-          log.info(kv.getKey().toStringNoTruncate() + " " + kv.getValue());
+          log.info("{} {}", kv.getKey().toStringNoTruncate(), kv.getValue());
         }
       }
 
       log.info("");
       log.info("Fetching replication records:");
       for (Entry<Key,Value> kv : ReplicationTable.getScanner(connMaster)) {
-        log.info(kv.getKey().toStringNoTruncate() + " " + ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
+        log.info("{} {}", kv.getKey().toStringNoTruncate(), ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
       }
 
       Future<Boolean> future = executor.submit(new Callable<Boolean>() {
@@ -267,16 +267,16 @@ public class MultiInstanceReplicationIT extends ConfigurableMacIT {
       log.info("Fetching metadata records:");
       for (Entry<Key,Value> kv : connMaster.createScanner(MetadataTable.NAME, Authorizations.EMPTY)) {
         if (ReplicationSection.COLF.equals(kv.getKey().getColumnFamily())) {
-          log.info(kv.getKey().toStringNoTruncate() + " " + ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
+          log.info("{} {}", kv.getKey().toStringNoTruncate(), ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
         } else {
-          log.info(kv.getKey().toStringNoTruncate() + " " + kv.getValue());
+          log.info("{} {}", kv.getKey().toStringNoTruncate(), kv.getValue());
         }
       }
 
       log.info("");
       log.info("Fetching replication records:");
       for (Entry<Key,Value> kv : ReplicationTable.getScanner(connMaster)) {
-        log.info(kv.getKey().toStringNoTruncate() + " " + ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
+        log.info("{} {}", kv.getKey().toStringNoTruncate(), ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
       }
 
       Scanner master = connMaster.createScanner(masterTable, Authorizations.EMPTY), peer = connPeer.createScanner(peerTable, Authorizations.EMPTY);
@@ -290,8 +290,8 @@ public class MultiInstanceReplicationIT extends ConfigurableMacIT {
         Assert.assertEquals(masterEntry.getValue(), peerEntry.getValue());
       }
 
-      log.info("Last master entry: " + masterEntry);
-      log.info("Last peer entry: " + peerEntry);
+      log.info("Last master entry: {}", masterEntry);
+      log.info("Last peer entry: {}", peerEntry);
 
       Assert.assertFalse("Had more data to read from the master", masterIter.hasNext());
       Assert.assertFalse("Had more data to read from the peer", peerIter.hasNext());
@@ -519,7 +519,7 @@ public class MultiInstanceReplicationIT extends ConfigurableMacIT {
     Iterators.size(connMaster.createScanner(masterTable, Authorizations.EMPTY).iterator());
 
     for (Entry<Key,Value> kv : ReplicationTable.getScanner(connMaster)) {
-      log.debug(kv.getKey().toStringNoTruncate() + " " + ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
+      log.debug("{} {}", kv.getKey().toStringNoTruncate(), ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
     }
 
     connMaster.replicationOperations().drain(masterTable, files);

@@ -748,7 +748,7 @@ public class ReplicationIT extends ConfigurableMacIT {
       s.fetchColumnFamily(LogColumnFamily.NAME);
       s.setRange(TabletsSection.getRange(tableId));
       for (Entry<Key,Value> entry : s) {
-        log.info(entry.getKey().toStringNoTruncate() + "=" + entry.getValue());
+        log.info("{}={}", entry.getKey().toStringNoTruncate(), entry.getValue());
       }
 
       try {
@@ -883,7 +883,7 @@ public class ReplicationIT extends ConfigurableMacIT {
         s = ReplicationTable.getScanner(conn);
         StatusSection.limit(s);
         for (Entry<Key,Value> content : s) {
-          log.info(content.getKey().toStringNoTruncate() + " => " + content.getValue());
+          log.info("{} => {}", content.getKey().toStringNoTruncate(), content.getValue());
         }
         throw e;
       } finally {
@@ -913,7 +913,7 @@ public class ReplicationIT extends ConfigurableMacIT {
     if (notFound) {
       s = ReplicationTable.getScanner(conn);
       for (Entry<Key,Value> content : s) {
-        log.info(content.getKey().toStringNoTruncate() + " => " + content.getValue());
+        log.info("{} => {}", content.getKey().toStringNoTruncate(), content.getValue());
       }
       Assert.assertFalse("Did not find the work entry for the status entry", notFound);
     }
@@ -957,7 +957,7 @@ public class ReplicationIT extends ConfigurableMacIT {
     if (notFound) {
       s = ReplicationTable.getScanner(conn);
       for (Entry<Key,Value> content : s) {
-        log.info(content.getKey().toStringNoTruncate() + " => " + content.getValue());
+        log.info("{} => {}", content.getKey().toStringNoTruncate(), content.getValue());
       }
       Assert.assertFalse("Did not find the work entries for the status entries", notFound);
     }
@@ -1029,7 +1029,7 @@ public class ReplicationIT extends ConfigurableMacIT {
       } catch (NoSuchElementException e) {} catch (IllegalArgumentException e) {
         s = ReplicationTable.getScanner(conn);
         for (Entry<Key,Value> content : s) {
-          log.info(content.getKey().toStringNoTruncate() + " => " + content.getValue());
+          log.info("{} => {}", content.getKey().toStringNoTruncate(), content.getValue());
         }
         Assert.fail("Found more than one work section entry");
       }
@@ -1040,7 +1040,7 @@ public class ReplicationIT extends ConfigurableMacIT {
     if (notFound) {
       s = ReplicationTable.getScanner(conn);
       for (Entry<Key,Value> content : s) {
-        log.info(content.getKey().toStringNoTruncate() + " => " + content.getValue());
+        log.info("{} => {}", content.getKey().toStringNoTruncate(), content.getValue());
       }
       Assert.assertFalse("Did not find the work entry for the status entry", notFound);
     }
@@ -1165,7 +1165,7 @@ public class ReplicationIT extends ConfigurableMacIT {
         Scanner s = conn.createScanner(MetadataTable.NAME, Authorizations.EMPTY);
         s.setRange(Range.prefix(ReplicationSection.getRowPrefix()));
         for (Entry<Key,Value> entry : s) {
-          log.info(entry.getKey().toStringNoTruncate() + " " + ProtobufUtil.toString(Status.parseFrom(entry.getValue().get())));
+          log.info("{} {}", entry.getKey().toStringNoTruncate(), ProtobufUtil.toString(Status.parseFrom(entry.getValue().get())));
         }
         Assert.fail("Expected all replication records in the metadata table to be closed");
       }
@@ -1200,7 +1200,7 @@ public class ReplicationIT extends ConfigurableMacIT {
         Scanner s = ReplicationTable.getScanner(conn);
         StatusSection.limit(s);
         for (Entry<Key,Value> entry : s) {
-          log.info(entry.getKey().toStringNoTruncate() + " " + TextFormat.shortDebugString(Status.parseFrom(entry.getValue().get())));
+          log.info("{} {}", entry.getKey().toStringNoTruncate(), TextFormat.shortDebugString(Status.parseFrom(entry.getValue().get())));
         }
         Assert.fail("Expected all replication records in the replication table to be closed");
       }
@@ -1297,7 +1297,7 @@ public class ReplicationIT extends ConfigurableMacIT {
         s = ReplicationTable.getScanner(conn);
         WorkSection.limit(s);
         Entry<Key,Value> e = Iterables.getOnlyElement(s);
-        log.info("Found entry: " + e.getKey().toStringNoTruncate());
+        log.info("Found entry: {}", e.getKey().toStringNoTruncate());
         Text expectedColqual = new ReplicationTarget("cluster1", "4", tableId).toText();
         Assert.assertEquals(expectedColqual, e.getKey().getColumnQualifier());
         notFound = false;
@@ -1307,7 +1307,7 @@ public class ReplicationIT extends ConfigurableMacIT {
         // Somehow we got more than one element. Log what they were
         s = ReplicationTable.getScanner(conn);
         for (Entry<Key,Value> content : s) {
-          log.info(content.getKey().toStringNoTruncate() + " => " + content.getValue());
+          log.info("{} => {}", content.getKey().toStringNoTruncate(), content.getValue());
         }
         Assert.fail("Found more than one work section entry");
       } catch (RuntimeException e) {
@@ -1334,7 +1334,7 @@ public class ReplicationIT extends ConfigurableMacIT {
     if (notFound) {
       s = ReplicationTable.getScanner(conn);
       for (Entry<Key,Value> content : s) {
-        log.info(content.getKey().toStringNoTruncate() + " => " + ProtobufUtil.toString(Status.parseFrom(content.getValue().get())));
+        log.info("{} => {}", content.getKey().toStringNoTruncate(), ProtobufUtil.toString(Status.parseFrom(content.getValue().get())));
       }
       Assert.assertFalse("Did not find the work entry for the status entry", notFound);
     }

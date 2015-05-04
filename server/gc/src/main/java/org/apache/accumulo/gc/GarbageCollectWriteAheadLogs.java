@@ -106,8 +106,8 @@ public class GarbageCollectWriteAheadLogs {
     this.liveServers = new LiveTServerSet(context, new Listener() {
       @Override
       public void update(LiveTServerSet current, Set<TServerInstance> deleted, Set<TServerInstance> added) {
-        log.debug("New tablet servers noticed: " + added);
-        log.debug("Tablet servers removed: " + deleted);
+        log.debug("New tablet servers noticed: {}", added);
+        log.debug("Tablet servers removed: {}", deleted);
       }
     });
     liveServers.startListeningForTabletServerChanges();
@@ -217,7 +217,7 @@ public class GarbageCollectWriteAheadLogs {
   private long removeFiles(Map<TServerInstance, Set<Path> > candidates, final GCStatus status) {
     for (Entry<TServerInstance,Set<Path>> entry : candidates.entrySet()) {
       for (Path path : entry.getValue()) {
-        log.debug("Removing unused WAL for server " + entry.getKey() + " log " + path);
+        log.debug("Removing unused WAL for server {} log {}", entry.getKey(), path);
         try {
           if (!useTrash || !fs.moveToTrash(path))
             fs.deleteRecursively(path);
@@ -225,7 +225,7 @@ public class GarbageCollectWriteAheadLogs {
         } catch (FileNotFoundException ex) {
           // ignored
         } catch (IOException ex) {
-          log.error("Unable to delete wal " + path + ": " + ex);
+          log.error("Unable to delete wal {}: ", path, ex);
         }
       }
     }
@@ -323,7 +323,7 @@ public class GarbageCollectWriteAheadLogs {
    * @return True if the WAL is still needed by replication (not a candidate for deletion)
    */
   protected boolean neededByReplication(Connector conn, Path wal) {
-    log.info("Checking replication table for " + wal);
+    log.info("Checking replication table for {}", wal);
 
     Iterable<Entry<Key,Value>> iter = getReplicationStatusForFile(conn, wal);
 
@@ -338,7 +338,7 @@ public class GarbageCollectWriteAheadLogs {
           return true;
         }
       } catch (InvalidProtocolBufferException e) {
-        log.error("Could not deserialize Status protobuf for " + entry.getKey(), e);
+        log.error("Could not deserialize Status protobuf for {}", entry.getKey(), e);
       }
     }
 

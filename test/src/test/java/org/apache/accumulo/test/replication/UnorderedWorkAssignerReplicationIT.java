@@ -236,16 +236,16 @@ public class UnorderedWorkAssignerReplicationIT extends ConfigurableMacIT {
       log.info("Fetching metadata records:");
       for (Entry<Key,Value> kv : connMaster.createScanner(MetadataTable.NAME, Authorizations.EMPTY)) {
         if (ReplicationSection.COLF.equals(kv.getKey().getColumnFamily())) {
-          log.info(kv.getKey().toStringNoTruncate() + " " + ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
+          log.info("{} {}", kv.getKey().toStringNoTruncate(), ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
         } else {
-          log.info(kv.getKey().toStringNoTruncate() + " " + kv.getValue());
+          log.info("{} {}", kv.getKey().toStringNoTruncate(), kv.getValue());
         }
       }
 
       log.info("");
       log.info("Fetching replication records:");
       for (Entry<Key,Value> kv : ReplicationTable.getScanner(connMaster)) {
-        log.info(kv.getKey().toStringNoTruncate() + " " + ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
+        log.info("{} {}", kv.getKey().toStringNoTruncate(), ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
       }
 
       Future<Boolean> future = executor.submit(new Callable<Boolean>() {
@@ -273,16 +273,16 @@ public class UnorderedWorkAssignerReplicationIT extends ConfigurableMacIT {
       log.info("Fetching metadata records:");
       for (Entry<Key,Value> kv : connMaster.createScanner(MetadataTable.NAME, Authorizations.EMPTY)) {
         if (ReplicationSection.COLF.equals(kv.getKey().getColumnFamily())) {
-          log.info(kv.getKey().toStringNoTruncate() + " " + ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
+          log.info("{} {}", kv.getKey().toStringNoTruncate(), ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
         } else {
-          log.info(kv.getKey().toStringNoTruncate() + " " + kv.getValue());
+          log.info("{} {}", kv.getKey().toStringNoTruncate(), kv.getValue());
         }
       }
 
       log.info("");
       log.info("Fetching replication records:");
       for (Entry<Key,Value> kv : ReplicationTable.getScanner(connMaster)) {
-        log.info(kv.getKey().toStringNoTruncate() + " " + ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
+        log.info("{} {}", kv.getKey().toStringNoTruncate(), ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
       }
 
       Scanner master = connMaster.createScanner(masterTable, Authorizations.EMPTY), peer = connPeer.createScanner(peerTable, Authorizations.EMPTY);
@@ -296,8 +296,8 @@ public class UnorderedWorkAssignerReplicationIT extends ConfigurableMacIT {
         Assert.assertEquals(masterEntry.getValue(), peerEntry.getValue());
       }
 
-      log.info("Last master entry: " + masterEntry);
-      log.info("Last peer entry: " + peerEntry);
+      log.info("Last master entry: {}", masterEntry);
+      log.info("Last peer entry: {}", peerEntry);
 
       Assert.assertFalse("Had more data to read from the master", masterIter.hasNext());
       Assert.assertFalse("Had more data to read from the peer", peerIter.hasNext());
@@ -534,7 +534,7 @@ public class UnorderedWorkAssignerReplicationIT extends ConfigurableMacIT {
 
     Set<String> files = connMaster.replicationOperations().referencedFiles(masterTable);
     for (String s : files) {
-      log.info("Found referenced file for " + masterTable + ": " + s);
+      log.info("Found referenced file for {}: {}", masterTable, s);
     }
 
     for (ProcessReference proc : cluster.getProcesses().get(ServerType.TABLET_SERVER)) {
@@ -546,7 +546,7 @@ public class UnorderedWorkAssignerReplicationIT extends ConfigurableMacIT {
     Iterators.size(connMaster.createScanner(masterTable, Authorizations.EMPTY).iterator());
 
     for (Entry<Key,Value> kv : connMaster.createScanner(ReplicationTable.NAME, Authorizations.EMPTY)) {
-      log.debug(kv.getKey().toStringNoTruncate() + " " + ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
+      log.debug("{} {}", kv.getKey().toStringNoTruncate(), ProtobufUtil.toString(Status.parseFrom(kv.getValue().get())));
     }
 
     connMaster.replicationOperations().drain(masterTable, files);

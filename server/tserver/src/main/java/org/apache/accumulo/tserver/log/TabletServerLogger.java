@@ -207,7 +207,7 @@ public class TabletServerLogger {
       if (next instanceof DfsLogger) {
         currentLog = (DfsLogger)next;
         logId.incrementAndGet();
-        log.info("Using next log " + currentLog.getFileName());
+        log.info("Using next log {}", currentLog.getFileName());
         return;
       } else {
         throw new RuntimeException("Error: unexpected type seen: " + next);
@@ -236,7 +236,7 @@ public class TabletServerLogger {
             alog.open(tserver.getClientAddressString());
             log.debug("Created next WAL " + alog.getFileName());
             while (!nextLog.offer(alog, 12, TimeUnit.HOURS)) {
-              log.info("Our WAL was not used for 12 hours: " + alog.getFileName());
+              log.info("Our WAL was not used for 12 hours: {}", alog.getFileName());
             }
           } catch (Exception t) {
             log.error("{}", t.getMessage(), t);
@@ -271,7 +271,7 @@ public class TabletServerLogger {
         } catch (DfsLogger.LogClosedException ex) {
           // ignore
         } catch (Throwable ex) {
-          log.error("Unable to cleanly close log " + currentLog.getFileName() + ": " + ex, ex);
+          log.error("Unable to cleanly close log {}: {} {}", currentLog.getFileName(), ex, ex);
         } finally {
           this.tserver.walogClosed(currentLog);
         }
@@ -350,10 +350,10 @@ public class TabletServerLogger {
           success = (currentLogId == logId.get());
         }
       } catch (DfsLogger.LogClosedException ex) {
-        log.debug("Logs closed while writing, retrying " + attempt);
+        log.debug("Logs closed while writing, retrying {}", attempt);
       } catch (Exception t) {
         if (attempt != 1) {
-          log.error("Unexpected error writing to log, retrying attempt " + attempt, t);
+          log.error("Unexpected error writing to log, retrying attempt {}", attempt, t);
         }
         UtilWaitThread.sleep(100);
       } finally {
@@ -476,7 +476,7 @@ public class TabletServerLogger {
 
     long t2 = System.currentTimeMillis();
 
-    log.debug(" wrote MinC finish  " + seq + ": writeTime:" + (t2 - t1) + "ms ");
+    log.debug(" wrote MinC finish  {}: writeTime:{}ms ", seq, (t2 - t1));
   }
 
   public int minorCompactionStarted(final CommitSession commitSession, final int seq, final String fullyQualifiedFileName) throws IOException {

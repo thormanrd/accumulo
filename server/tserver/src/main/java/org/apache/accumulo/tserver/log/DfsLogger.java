@@ -186,7 +186,7 @@ public class DfsLogger implements Comparable<DfsLogger> {
             }
           }
         } catch (Exception ex) {
-          log.warn("Exception syncing " + ex);
+          log.warn("Exception syncing", ex);
           for (DfsLogger.LogWork logWork : work) {
             logWork.exception = ex;
           }
@@ -361,7 +361,7 @@ public class DfsLogger implements Comparable<DfsLogger> {
 
       }
     } catch (EOFException e) {
-      log.warn("Got EOFException trying to read WAL header information, assuming the rest of the file (" + path + ") has no data.");
+      log.warn("Got EOFException trying to read WAL header information, assuming the rest of the file ({}) has no data.", path);
       // A TabletServer might have died before the (complete) header was written
       throw new LogHeaderIncompleteException(e);
     }
@@ -371,7 +371,7 @@ public class DfsLogger implements Comparable<DfsLogger> {
 
   public synchronized void open(String address) throws IOException {
     String filename = UUID.randomUUID().toString();
-    log.debug("Address is " + address);
+    log.debug("Address is {}", address);
     String logger = Joiner.on("+").join(address.split(":"));
 
     log.debug("DfsLogger.open() begin");
@@ -431,7 +431,7 @@ public class DfsLogger implements Comparable<DfsLogger> {
       key.tserverSession = filename;
       key.filename = filename;
       write(key, EMPTY);
-      log.debug("Got new write-ahead log: " + this);
+      log.debug("Got new write-ahead log: {}", this);
     } catch (Exception ex) {
       if (logFile != null)
         logFile.close();
